@@ -1,0 +1,19 @@
+# Dart
+server/.dart_tool/
+server/.packages
+server/build/
+server/.idea/
+server/.vscode/
+
+# Flutter
+client/.dart_tool/
+client/.idea/
+client/.vscode/
+client/build/
+client/ios/Pods/
+client/pubspec.lock
+client/.packages
+
+# macOS, system
+.DS_Store
+
