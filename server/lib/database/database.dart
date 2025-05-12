@@ -59,6 +59,49 @@ class DatabaseHelper {
     ''');
     print('Sentences table created');
 
+    // 큐레이션 테이블 생성
+    db.execute('''
+      CREATE TABLE IF NOT EXISTS curations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        subtitle TEXT,
+        image TEXT,
+        description TEXT,
+        recommender_title TEXT,
+        recommender_name TEXT,
+        recommender_latitude REAL,
+        recommender_longitude REAL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+    print('Curations table created');
+
+    // 책 테이블 생성
+    db.execute('''
+      CREATE TABLE IF NOT EXISTS books (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        writer TEXT NOT NULL,
+        summary TEXT,
+        image TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+    print('Books table created');
+
+    // 큐레이션-책 관계 테이블 생성
+    db.execute('''
+      CREATE TABLE IF NOT EXISTS curation_books (
+        curation_id INTEGER NOT NULL,
+        book_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (curation_id, book_id),
+        FOREIGN KEY (curation_id) REFERENCES curations (id) ON DELETE CASCADE,
+        FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE CASCADE
+      )
+    ''');
+    print('Curation_books table created');
+
     // 테이블이 제대로 생성되었는지 확인
     final tables = db.select("SELECT name FROM sqlite_master WHERE type='table'");
     print('Created tables: ${tables.map((t) => t['name']).join(', ')}');
@@ -142,6 +185,55 @@ class DatabaseHelper {
   static Future<void> deleteImage(int id) async {
     final db = await database;
     db.execute('DELETE FROM images WHERE id = ?', [id]);
+  }
+
+  /// 큐레이션 상세 정보를 가져옵니다.
+  static Future<Map<String, dynamic>?> getCuration(int curationId) async {
+    final db = await database;
+    
+    // 큐레이션 기본 정보 조회
+    final curationResult = db.select(
+      'SELECT * FROM curations WHERE id = ?',
+      [curationId]
+    );
+    
+    if (curationResult.isEmpty) {
+      return null;
+    }
+    
+    final curation = Map<String, dynamic>.from(curationResult.first);
+    
+    // 큐레이션에 포함된 책 목록 조회
+    final booksResult = db.select('''
+      SELECT b.* 
+      FROM books b
+      INNER JOIN curation_books cb ON b.id = cb.book_id
+      WHERE cb.curation_id = ?
+      ORDER BY cb.created_at
+    ''', [curationId]);
+    
+    curation['books'] = booksResult.map((book) => Map<String, dynamic>.from(book)).toList();
+    
+    // 추천자 위치 정보 추가
+    curation['recommenderLocation'] = {
+      'name': curation['recommender_name'],
+      'latitude': curation['recommender_latitude'],
+      'longitude': curation['recommender_longitude']
+    };
+    
+    // 불필요한 필드 제거
+    curation.remove('recommender_name');
+    curation.remove('recommender_latitude');
+    curation.remove('recommender_longitude');
+    
+    return curation;
+  }
+
+  /// 모든 문장을 가져옵니다.
+  static Future<List<Map<String, dynamic>>> getAllSentences() async {
+    final db = await database;
+    final result = db.select('SELECT * FROM sentences ORDER BY created_at DESC');
+    return result.map((row) => Map<String, dynamic>.from(row)).toList();
   }
 
   /// 데이터베이스 연결을 닫습니다.

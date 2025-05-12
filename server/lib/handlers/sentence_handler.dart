@@ -4,6 +4,20 @@ import '../database/database.dart';
 
 /// 문장 관련 요청을 처리하는 핸들러
 class SentenceHandler {
+  /// 모든 문장을 가져옵니다.
+  static Future<Response> getAllSentences(Request request) async {
+    try {
+      final sentences = await DatabaseHelper.getAllSentences();
+      return Response(200,
+        headers: {'content-type': 'application/json'},
+        body: jsonEncode(sentences),
+      );
+    } catch (e) {
+      print('Error getting sentences: $e');
+      return Response(500, body: 'Error getting sentences: $e');
+    }
+  }
+
   /// 문장을 저장합니다.
   static Future<Response> saveSentence(Request request) async {
     try {
@@ -33,8 +47,8 @@ class SentenceHandler {
       return Response(200,
         headers: {'content-type': 'application/json'},
         body: jsonEncode({
-          'status': 'ok',
-          'uuid': sentenceId,
+          'status': 'success',
+          'sentenceId': sentenceId,
         }),
       );
     } catch (e) {
