@@ -1,0 +1,22 @@
+targets:
+  $default:
+    sources:
+      - lib/**
+      - swagger/**
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'swagger'
+          output_folder: 'lib/generated'
+          with_base_url: true
+          with_converter: true
+          use_required_attribute_for_headers: true
+          ignore_headers: false
+          enums_case_sensitive: true
+          build_only_models: false
+          separate_models: false
+          include_if_null: false
+          use_path_for_request_names: true
+          add_base_path_to_requests: false
+          override_to_string: true
+          generate_first_succeed_response: true 

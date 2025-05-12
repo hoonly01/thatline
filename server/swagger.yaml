@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: OCR API
+  description: 이미지에서 텍스트를 추출하는 OCR API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: 로컬 개발 서버
+
+paths:
+  /:
+    get:
+      summary: 서버 상태 확인
+      description: 서버가 정상적으로 동작하는지 확인하는 엔드포인트
+      responses:
+        '200':
+          description: 서버가 정상 동작 중
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Hello, World!"
+
+  /echo/{message}:
+    get:
+      summary: 에코 테스트
+      description: 입력한 메시지를 그대로 반환하는 테스트 엔드포인트
+      parameters:
+        - name: message
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 성공
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /ocr:
+    post:
+      summary: OCR 텍스트 추출
+      description: 이미지에서 텍스트를 추출하는 OCR 엔드포인트
+      requestBody:
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["추출된 텍스트 1", "추출된 텍스트 2"]
+        '400':
+          description: 잘못된 요청
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "No image data provided"
+        '500':
+          description: 서버 에러
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error processing image" 
