@@ -17,3 +17,24 @@ client/.packages
 # macOS, system
 .DS_Store
 
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Environment files
+.env
+config.json
+
