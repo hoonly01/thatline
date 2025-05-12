@@ -11,6 +11,7 @@ import 'package:shelf_static/shelf_static.dart';
 import '../lib/handlers/ocr_handler.dart';
 import '../lib/handlers/image_handler.dart';
 import '../lib/handlers/sentence_handler.dart';
+import '../lib/handlers/curation_handler.dart';
 import '../lib/swagger_ui.dart';
 
 // 설정 파일에서 API 키를 읽어오는 함수
@@ -73,9 +74,11 @@ String _generateSwaggerHtml() {
 final _router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler)
-  ..post('/ocr', OcrHandler.handle)
+  ..post('/ocr/text', OcrHandler.handle)
   ..post('/ocr/form', OcrHandler.handleForm)
   ..post('/sentences', SentenceHandler.saveSentence)
+  ..get('/sentences', SentenceHandler.getAllSentences)
+  ..get('/curation/<curationId>', CurationHandler.getCuration)
   ..get('/docs', (Request request) => Response.ok(SwaggerUI.generateHtml(), headers: {'content-type': 'text/html'}));
 
 Response _rootHandler(Request req) {
