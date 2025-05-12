@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: Google Cloud Vision API
+  description: Google Cloud Vision API for OCR
+  version: 1.0.0
+
+servers:
+  - url: https://vision.googleapis.com/v1
+    description: Google Cloud Vision API server
+
+paths:
+  /images:annotate:
+    post:
+      summary: Perform OCR on an image
+      operationId: ocr
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotateImageRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotateImageResponse'
+
+components:
+  schemas:
+    AnnotateImageRequest:
+      type: object
+      properties:
+        image:
+          $ref: '#/components/schemas/Image'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+      required:
+        - image
+        - features
+
+    Image:
+      type: object
+      properties:
+        content:
+          type: string
+          format: byte
+      required:
+        - content
+
+    Feature:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [TEXT_DETECTION]
+      required:
+        - type
+
+    AnnotateImageResponse:
+      type: object
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotateImageResponseItem'
+      required:
+        - responses
+
+    AnnotateImageResponseItem:
+      type: object
+      properties:
+        textAnnotations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TextAnnotation'
+      required:
+        - textAnnotations
+
+    TextAnnotation:
+      type: object
+      properties:
+        description:
+          type: string
+      required:
+        - description 
