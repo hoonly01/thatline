@@ -1,19 +1,43 @@
-# Dart
+# Dart (Server)
 server/.dart_tool/
 server/.packages
 server/build/
 server/.idea/
 server/.vscode/
 
-# Flutter
+# Flutter (Client)
 client/.dart_tool/
 client/.idea/
 client/.vscode/
 client/build/
 client/ios/Pods/
-client/pubspec.lock
 client/.packages
+client/pubspec.lock
 
-# macOS, system
+# macOS and System files
 .DS_Store
 
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ / JetBrains
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Environment and Configuration
+.env
+config.json
+
+# Secrets and Local Resources
+key/
+test_ocr_pics/
