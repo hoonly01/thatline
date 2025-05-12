@@ -4,6 +4,7 @@ server/.packages
 server/build/
 server/.idea/
 server/.vscode/
+server/*.db
 
 # Flutter (Client)
 client/.dart_tool/

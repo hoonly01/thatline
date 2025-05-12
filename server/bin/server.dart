@@ -8,6 +8,10 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:shelf_static/shelf_static.dart';
+import '../lib/handlers/ocr_handler.dart';
+import '../lib/handlers/image_handler.dart';
+import '../lib/handlers/sentence_handler.dart';
+import '../lib/swagger_ui.dart';
 
 // 설정 파일에서 API 키를 읽어오는 함수
 Future<String> _loadApiKey() async {
@@ -69,8 +73,10 @@ String _generateSwaggerHtml() {
 final _router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler)
-  ..post('/ocr', _ocrHandler)
-  ..get('/docs', (Request request) => Response.ok(_generateSwaggerHtml(), headers: {'content-type': 'text/html'}));
+  ..post('/ocr', OcrHandler.handle)
+  ..post('/ocr/form', OcrHandler.handleForm)
+  ..post('/sentences', SentenceHandler.saveSentence)
+  ..get('/docs', (Request request) => Response.ok(SwaggerUI.generateHtml(), headers: {'content-type': 'text/html'}));
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
