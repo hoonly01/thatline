@@ -32,7 +32,6 @@
 - Dart 3.0+
 - Provider (상태 관리)
 - Dio (HTTP 클라이언트)
-- Hive (로컬 데이터베이스)
 
 ### 백엔드
 - Dart with Shelf
