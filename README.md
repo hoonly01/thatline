@@ -4,7 +4,6 @@
   
   [![Flutter](https://img.shields.io/badge/Flutter-3.0+-02569B?logo=flutter)](https://flutter.dev/)
   [![Dart](https://img.shields.io/badge/Dart-3.0+-0175C2?logo=dart)](https://dart.dev/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
   <p>ThatLine은 독서 기록과 큐레이션을 위한 서비스입니다. OCR을 활용한 문장 추출, 문장 저장, 큐레이션 기능을 제공합니다.</p>
 </div>
