@@ -97,19 +97,25 @@ class VisionOCRHandler {
     ) {
         // 에러 처리
         if let error = error {
-            completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+            }
             return
         }
 
         // 결과 추출
         guard let observations = request.results as? [VNRecognizedTextObservation] else {
-            completion(.failure(OCRError.noTextFound))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.noTextFound))
+            }
             return
         }
 
         // 빈 결과 체크
         if observations.isEmpty {
-            completion(.failure(OCRError.noTextFound))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.noTextFound))
+            }
             return
         }
 
@@ -130,12 +136,16 @@ class VisionOCRHandler {
 
         // 결과가 없으면 에러
         if recognizedTexts.isEmpty {
-            completion(.failure(OCRError.noTextFound))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.noTextFound))
+            }
             return
         }
 
-        // 성공
-        completion(.success(recognizedTexts))
+        // 성공 - 메인 스레드에서 콜백 호출
+        DispatchQueue.main.async {
+            completion(.success(recognizedTexts))
+        }
     }
 
     /// 이미지에서 텍스트와 위치 정보를 함께 인식합니다 (고급 기능)
@@ -148,19 +158,25 @@ class VisionOCRHandler {
     ) {
         guard let image = UIImage(contentsOfFile: imagePath),
               let cgImage = image.cgImage else {
-            completion(.failure(OCRError.invalidImage))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.invalidImage))
+            }
             return
         }
 
         let request = VNRecognizeTextRequest { request, error in
             if let error = error {
-                completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+                DispatchQueue.main.async {
+                    completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+                }
                 return
             }
 
             guard let observations = request.results as? [VNRecognizedTextObservation],
                   !observations.isEmpty else {
-                completion(.failure(OCRError.noTextFound))
+                DispatchQueue.main.async {
+                    completion(.failure(OCRError.noTextFound))
+                }
                 return
             }
 
@@ -183,9 +199,13 @@ class VisionOCRHandler {
             }
 
             if blocks.isEmpty {
-                completion(.failure(OCRError.noTextFound))
+                DispatchQueue.main.async {
+                    completion(.failure(OCRError.noTextFound))
+                }
             } else {
-                completion(.success(blocks))
+                DispatchQueue.main.async {
+                    completion(.success(blocks))
+                }
             }
         }
 
@@ -195,7 +215,9 @@ class VisionOCRHandler {
         do {
             try handler.perform([request])
         } catch {
-            completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+            DispatchQueue.main.async {
+                completion(.failure(OCRError.processingFailed(error.localizedDescription)))
+            }
         }
     }
 }

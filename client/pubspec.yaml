@@ -50,6 +50,8 @@ dependencies:
   flutter_svg: ^2.0.9
   cached_network_image: ^3.3.0
   google_maps_flutter: ^2.12.2
+  # UUID 생성
+  uuid: ^4.0.0
 
 dev_dependencies:
   flutter_test:

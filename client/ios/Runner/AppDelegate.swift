@@ -21,7 +21,8 @@ import UIKit
 
     /// Method Channel 설정
     private func setupMethodChannels() {
-        guard let controller = window?.rootViewController as? FlutterViewController else {
+        guard let window = window,
+              let controller = window.rootViewController as? FlutterViewController else {
             print("⚠️ FlutterViewController를 찾을 수 없습니다")
             return
         }

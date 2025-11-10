@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 import 'package:thatline_client/screens/main_screen.dart';
 import 'package:thatline_client/services/on_device_ocr_service.dart';
 
@@ -24,6 +25,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isLoading = false;
   final ImagePicker _picker = ImagePicker();
   final OnDeviceOCRService _ocrService = OnDeviceOCRService();
+  final Uuid _uuid = const Uuid();
   String _loadingMessage = '처리 중...';
 
   @override
@@ -263,7 +265,7 @@ class _CameraScreenState extends State<CameraScreen> {
   /// 서버에 문장 저장
   Future<void> _saveSentenceToServer(Map<String, String> data) async {
     final sentenceData = {
-      'sentenceId': 'ocr-${DateTime.now().millisecondsSinceEpoch}',
+      'sentenceId': _uuid.v4(),
       'text': data['text']!,
       'bookName': data['bookName']!,
       'bookWriter': data['bookWriter']!,
